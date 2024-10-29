@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 using Autodesk.ModelDerivative;
 using Autodesk.ModelDerivative.Model;
 
-public record TranslationStatus(string Status, string Progress, IEnumerable<string>? Messages);
+public record TranslationStatus(string Status, string Progress, IEnumerable<string> Messages);
 
 public partial class APS
 {
@@ -16,7 +16,7 @@ public partial class APS
     public async Task<Job> TranslateModel(string objectId, string rootFilename)
     {
         var auth = await GetInternalToken();
-        var modelDerivativeClient = new ModelDerivativeClient(_sdkManager);
+        var modelDerivativeClient = new ModelDerivativeClient();
         var payload = new JobPayload
         {
             Input = new JobPayloadInput
@@ -25,21 +25,13 @@ public partial class APS
             },
             Output = new JobPayloadOutput
             {
-                Formats = new List<JobPayloadFormat>
-                {
-                    new JobSvf2OutputFormat
+                Formats =
+                [
+                    new JobPayloadFormatSVF2
                     {
-                        Views = new List<View>
-                        {
-                            View._2d,
-                            View._3d
-                        }
+                        Views = [View._2d, View._3d]
                     }
-                },
-                Destination = new JobPayloadOutputDestination()
-                {
-                    Region = Region.US
-                }
+                ]
             }
         };
         if (!string.IsNullOrEmpty(rootFilename))
@@ -47,7 +39,7 @@ public partial class APS
             payload.Input.RootFilename = rootFilename;
             payload.Input.CompressedUrn = true;
         }
-        var job = await modelDerivativeClient.StartJobAsync(jobPayload: payload, accessToken: auth.AccessToken);
+        var job = await modelDerivativeClient.StartJobAsync(jobPayload: payload, region: Region.US, accessToken: auth.AccessToken);
         return job;
     }
 
@@ -58,9 +50,7 @@ public partial class APS
         try
         {
             var manifest = await modelDerivativeClient.GetManifestAsync(urn, accessToken: auth.AccessToken);
-            var messages = new List<string>();
-            // TODO: collect messages from manifest
-            return new TranslationStatus(manifest.Status, manifest.Progress, messages);
+            return new TranslationStatus(manifest.Status, manifest.Progress, []);
         }
         catch (ModelDerivativeApiException ex)
         {

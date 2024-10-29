@@ -9,9 +9,8 @@ public partial class APS
 {
     private async Task EnsureBucketExists(string bucketKey)
     {
-        const string region = "US";
         var auth = await GetInternalToken();
-        var ossClient = new OssClient(_sdkManager);
+        var ossClient = new OssClient();
         try
         {
             await ossClient.GetBucketDetailsAsync(bucketKey, accessToken: auth.AccessToken);
@@ -23,9 +22,9 @@ public partial class APS
                 var payload = new CreateBucketsPayload
                 {
                     BucketKey = bucketKey,
-                    PolicyKey = "persistent"
+                    PolicyKey = PolicyKey.Persistent
                 };
-                await ossClient.CreateBucketAsync(region, payload, auth.AccessToken);
+                await ossClient.CreateBucketAsync(Region.US, payload, auth.AccessToken);
             }
             else
             {
@@ -34,12 +33,12 @@ public partial class APS
         }
     }
 
-    public async Task<ObjectDetails> UploadModel(string objectName, string pathToFile)
+    public async Task<ObjectDetails> UploadModel(string objectName, Stream stream)
     {
         await EnsureBucketExists(_bucket);
         var auth = await GetInternalToken();
         var ossClient = new OssClient(_sdkManager);
-        var objectDetails = await ossClient.Upload(_bucket, objectName, pathToFile, auth.AccessToken, new System.Threading.CancellationToken());
+        var objectDetails = await ossClient.Upload(_bucket, objectName, stream, accessToken: auth.AccessToken);
         return objectDetails;
     }
 

@@ -21,14 +21,14 @@ public partial class APS
     public async Task<Token> GetPublicToken()
     {
         if (_publicTokenCache == null || _publicTokenCache.ExpiresAt < DateTime.UtcNow)
-            _publicTokenCache = await GetToken(new List<Scopes> { Scopes.ViewablesRead });
+            _publicTokenCache = await GetToken([Scopes.ViewablesRead]);
         return _publicTokenCache;
     }
 
     private async Task<Token> GetInternalToken()
     {
         if (_internalTokenCache == null || _internalTokenCache.ExpiresAt < DateTime.UtcNow)
-            _internalTokenCache = await GetToken(new List<Scopes> { Scopes.BucketCreate, Scopes.BucketRead, Scopes.DataRead, Scopes.DataWrite, Scopes.DataCreate });
+            _internalTokenCache = await GetToken([Scopes.BucketCreate, Scopes.BucketRead, Scopes.DataRead, Scopes.DataWrite, Scopes.DataCreate]);
         return _internalTokenCache;
     }
 }

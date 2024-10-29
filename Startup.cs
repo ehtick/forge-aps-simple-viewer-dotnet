@@ -25,7 +25,7 @@ public class Startup
         {
             throw new ApplicationException("Missing required environment variables APS_CLIENT_ID or APS_CLIENT_SECRET.");
         }
-        services.AddSingleton<APS>(new APS(clientID, clientSecret, bucket));
+        services.AddSingleton(new APS(clientID, clientSecret, bucket));
     }
 
     // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

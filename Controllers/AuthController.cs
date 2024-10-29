@@ -6,8 +6,6 @@ using Microsoft.AspNetCore.Mvc;
 [Route("api/[controller]")]
 public class AuthController : ControllerBase
 {
-    public record AccessToken(string access_token, long expires_in);
-
     private readonly APS _aps;
 
     public AuthController(APS aps)
@@ -16,12 +14,13 @@ public class AuthController : ControllerBase
     }
 
     [HttpGet("token")]
-    public async Task<AccessToken> GetAccessToken()
+    public async Task<IActionResult> GetAccessToken()
     {
         var token = await _aps.GetPublicToken();
-        return new AccessToken(
-            token.AccessToken,
-            (long)Math.Round((token.ExpiresAt - DateTime.UtcNow).TotalSeconds)
-        );
+        return Ok(new
+        {
+            access_token = token.AccessToken,
+            expires_in = (long)Math.Round((token.ExpiresAt - DateTime.UtcNow).TotalSeconds)
+        });
     }
 }
