@@ -6,6 +6,5 @@
     <PackageReference Include="Autodesk.Authentication" Version="2.0.0-beta2" />
     <PackageReference Include="Autodesk.ModelDerivative" Version="2.0.0-beta3" />
     <PackageReference Include="Autodesk.OSS" Version="2.0.0-beta2" />
-    <PackageReference Include="Autodesk.SDKManager" Version="1.1.0" />
   </ItemGroup>
 </Project>
