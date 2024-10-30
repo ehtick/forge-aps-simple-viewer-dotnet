@@ -37,7 +37,7 @@ public partial class APS
     {
         await EnsureBucketExists(_bucket);
         var auth = await GetInternalToken();
-        var ossClient = new OssClient(_sdkManager);
+        var ossClient = new OssClient();
         var objectDetails = await ossClient.Upload(_bucket, objectName, stream, accessToken: auth.AccessToken);
         return objectDetails;
     }
@@ -46,7 +46,7 @@ public partial class APS
     {
         await EnsureBucketExists(_bucket);
         var auth = await GetInternalToken();
-        var ossClient = new OssClient(_sdkManager);
+        var ossClient = new OssClient();
         const int PageSize = 64;
         var results = new List<ObjectDetails>();
         var response = await ossClient.GetObjectsAsync(_bucket, PageSize, accessToken: auth.AccessToken);

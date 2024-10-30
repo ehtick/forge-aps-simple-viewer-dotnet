@@ -46,7 +46,7 @@ public partial class APS
     public async Task<TranslationStatus> GetTranslationStatus(string urn)
     {
         var auth = await GetInternalToken();
-        var modelDerivativeClient = new ModelDerivativeClient(_sdkManager);
+        var modelDerivativeClient = new ModelDerivativeClient();
         try
         {
             var manifest = await modelDerivativeClient.GetManifestAsync(urn, accessToken: auth.AccessToken);

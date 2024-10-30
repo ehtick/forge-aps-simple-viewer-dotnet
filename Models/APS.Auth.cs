@@ -13,7 +13,7 @@ public partial class APS
 
     private async Task<Token> GetToken(List<Scopes> scopes)
     {
-        var authenticationClient = new AuthenticationClient(_sdkManager);
+        var authenticationClient = new AuthenticationClient();
         var auth = await authenticationClient.GetTwoLeggedTokenAsync(_clientId, _clientSecret, scopes);
         return new Token(auth.AccessToken, DateTime.UtcNow.AddSeconds((double)auth.ExpiresIn));
     }
